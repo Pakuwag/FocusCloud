@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Portable Web App — FocusCloud</title>
+    <meta name="description" content="A small, responsive, single-file portable web application.">
+    <meta name="theme-color" content="#0b5cff">
+    <style>
+        :root{
+            --bg:#f6f7fb; --card:#fff; --text:#0b1330; --muted:#5b6470; --accent:#0b5cff;
+            --radius:12px; --gap:16px; --maxw:900px;
+        }
+        [data-theme="dark"]{
+            --bg:#0b1220; --card:#071022; --text:#e6eefc; --muted:#94a3c4; --accent:#4ea1ff;
+        }
+        *{box-sizing:border-box}
+        html,body{height:100%}
+        body{
+            margin:0; font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+            Roboto, "Helvetica Neue", Arial; background:var(--bg); color:var(--text);
+            -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+            padding:24px; display:flex; align-items:center; justify-content:center;
+        }
+        .app{
+            width:100%; max-width:var(--maxw); margin:0 auto;
+            display:grid; grid-template-columns: 1fr; gap:var(--gap);
+        }
+
+        header{
+            display:flex; align-items:center; gap:12px;
+            background:linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
+            padding:12px; border-radius:var(--radius); backdrop-filter: blur(6px);
+        }
+        .brand{display:flex; gap:12px; align-items:center; flex:1}
+        .logo{width:44px; height:44px; display:grid; place-items:center; border-radius:10px; background:linear-gradient(135deg,var(--accent),#6adcff); color:white; font-weight:700}
+        h1{font-size:1.05rem; margin:0}
+        p.lead{margin:0; color:var(--muted); font-size:0.9rem}
+
+        nav{display:flex; gap:8px; align-items:center}
+        .btn{
+            background:transparent; border:1px solid transparent; padding:8px 10px; border-radius:10px; cursor:pointer;
+            color:var(--text); font-weight:600; font-size:0.9rem;
+        }
+        .btn.ghost{background:transparent; border:1px solid rgba(0,0,0,0.06)}
+        .btn.primary{background:var(--accent); color:white; border:0}
+        .small{padding:6px 8px; font-size:0.85rem}
+
+        .container{
+            background:var(--card); padding:16px; border-radius:var(--radius); box-shadow: 0 6px 18px rgba(9,14,29,0.06);
+        }
+
+        .grid{
+            display:grid; gap:12px;
+        }
+        .columns{grid-template-columns: 1fr; }
+        @media(min-width:880px){
+            .columns{grid-template-columns: 2fr 1fr; align-items:start}
+        }
+
+        textarea.input{
+            width:100%; min-height:140px; border-radius:10px; padding:12px; resize:vertical; font-size:0.95rem;
+            border:1px solid rgba(9,14,29,0.06); background:transparent; color:var(--text);
+        }
+
+        .note-list{display:flex; flex-direction:column; gap:8px; max-height:360px; overflow:auto; padding-right:6px}
+        .note{
+            display:flex; gap:10px; align-items:flex-start; padding:10px; border-radius:10px; background:linear-gradient(180deg, rgba(0,0,0,0.01), transparent);
+            border:1px solid rgba(0,0,0,0.03);
+        }
+        .note .meta{flex:1}
+        .note h4{margin:0 0 6px 0; font-size:0.95rem}
+        .note p{margin:0; color:var(--muted); font-size:0.9rem}
+
+        footer{display:flex; justify-content:space-between; gap:12px; align-items:center; color:var(--muted); font-size:0.85rem}
+        .controls{display:flex; gap:8px; align-items:center}
+
+        .hidden{display:none !important}
+
+        /* Accessibility focus */
+        .btn:focus, textarea:focus{outline:3px solid color-mix(in srgb, var(--accent) 30%, transparent); outline-offset:2px}
+
+        /* small helper */
+        .status{font-weight:700; color:var(--muted)}
+    </style>
+</head>
+<body>
+    <div class="app" id="app" role="application" aria-labelledby="title">
+        <header class="container" aria-hidden="false">
+            <div class="brand" role="banner">
+                <div class="logo" aria-hidden="true">FC</div>
+                <div>
+                    <h1 id="title">FocusCloud</h1>
+                    <p class="lead">Single-file portable web app — notes, export/import, theme & offline indicator</p>
+                </div>
+            </div>
+            <nav aria-label="Primary">
+                <button class="btn small" id="themeToggle" title="Toggle theme" aria-pressed="false">Dark</button>
+                <button class="btn small ghost" id="clearAll" title="Clear all notes">Clear</button>
+                <button class="btn small primary" id="addNote" title="Add note">Add</button>
+            </nav>
+        </header>
+
+        <main class="container grid columns" id="main">
+            <section aria-labelledby="notesTitle">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px">
+                    <h2 id="notesTitle" style="margin:0; font-size:1rem">Notes</h2>
+                    <div style="display:flex; gap:8px">
+                        <button class="btn ghost small" id="exportBtn">Export</button>
+                        <label class="btn ghost small" style="cursor:pointer">
+                            Import
+                            <input id="importFile" type="file" accept="application/json" style="display:none" />
+                        </label>
+                    </div>
+                </div>
+
+                <div class="grid">
+                    <textarea id="noteInput" class="input" placeholder="Write something... (title: optional — use a line with 'Title: ...')"></textarea>
+                    <div style="display:flex; gap:8px; justify-content:flex-end">
+                        <button class="btn ghost" id="saveBtn">Save</button>
+                        <button class="btn" id="saveLocalBtn">Save & Close</button>
+                    </div>
+                    <div class="note-list" id="notes"></div>
+                </div>
+            </section>
+
+            <aside aria-labelledby="infoTitle" style="min-width:220px">
+                <h3 id="infoTitle" style="margin-top:0">Tools</h3>
+                <div class="container" style="padding:12px">
+                    <p style="margin:0 0 8px 0; color:var(--muted)">Status</p>
+                    <div style="display:flex; gap:8px; align-items:center; margin-bottom:12px">
+                        <div class="status" id="onlineStatus">Checking...</div>
+                        <div style="flex:1"></div>
+                    </div>
+
+                    <p style="margin:0 0 8px 0; color:var(--muted)">Quick actions</p>
+                    <div style="display:flex; flex-direction:column; gap:8px">
+                        <button class="btn ghost" id="downloadHTML">Download HTML</button>
+                        <button class="btn ghost" id="clearStorage">Clear Storage</button>
+                    </div>
+
+                    <hr style="margin:12px 0; border:0; height:1px; background:linear-gradient(90deg, transparent, rgba(0,0,0,0.05), transparent)">
+
+                    <p style="margin:0; color:var(--muted); font-size:0.85rem">
+                        This is a portable single-file demo. Notes are saved to localStorage. Use Export/Import to move data between devices.
+                    </p>
+                </div>
+            </aside>
+
+        </main>
+
+        <footer class="container">
+            <div>Built for portability — no external resources</div>
+            <div style="display:flex; gap:8px; align-items:center">
+                <div id="savedAt" class="muted">—</div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        (function(){
+            // Elements
+            const noteInput = document.getElementById('noteInput');
+            const saveBtn = document.getElementById('saveBtn');
+            const saveLocalBtn = document.getElementById('saveLocalBtn');
+            const addNote = document.getElementById('addNote');
+            const notesEl = document.getElementById('notes');
+            const exportBtn = document.getElementById('exportBtn');
+            const importFile = document.getElementById('importFile');
+            const clearAll = document.getElementById('clearAll');
+            const clearStorage = document.getElementById('clearStorage');
+            const onlineStatus = document.getElementById('onlineStatus');
+            const savedAt = document.getElementById('savedAt');
+            const themeToggle = document.getElementById('themeToggle');
+            const downloadHTML = document.getElementById('downloadHTML');
+
+            // Storage keys
+            const KEY = 'focuscloud.notes.v1';
+            const THEME_KEY = 'focuscloud.theme';
+
+            // Utilities
+            const nowISO = ()=> new Date().toISOString();
+            const loadNotes = ()=> JSON.parse(localStorage.getItem(KEY) || '[]');
+            const saveNotes = (arr)=> localStorage.setItem(KEY, JSON.stringify(arr));
+            const render = ()=>{
+                const list = loadNotes();
+                notesEl.innerHTML = '';
+                if(!list.length){
+                    notesEl.innerHTML = '<div style="color:var(--muted)">No notes yet — create one using the editor above.</div>';
+                    savedAt.textContent = '';
+                    return;
+                }
+                for(let i=list.length-1;i>=0;i--){
+                    const n = list[i];
+                    const div = document.createElement('div');
+                    div.className = 'note';
+                    const meta = document.createElement('div');
+                    meta.className = 'meta';
+                    const title = document.createElement('h4');
+                    title.textContent = n.title || (n.text.split('\\n')[0] || 'Untitled');
+                    const p = document.createElement('p');
+                    p.textContent = n.text.length > 280 ? n.text.slice(0,280) + '…' : n.text;
+                    meta.appendChild(title);
+                    meta.appendChild(p);
+                    const actions = document.createElement('div');
+                    actions.style.display='flex'; actions.style.flexDirection='column'; actions.style.gap='6px';
+                    const open = document.createElement('button');
+                    open.className='btn small ghost'; open.textContent='Open';
+                    open.onclick = ()=> {
+                        noteInput.value = n.text;
+                        noteInput.focus();
+                    };
+                    const del = document.createElement('button');
+                    del.className='btn small'; del.textContent='Delete';
+                    del.onclick = ()=> {
+                        if(confirm('Delete this note?')) {
+                            const idx = list.indexOf(n);
+                            if(idx>-1) { list.splice(idx,1); saveNotes(list); render(); }
+                        }
+                    };
+                    actions.appendChild(open);
+                    actions.appendChild(del);
+                    div.appendChild(meta);
+                    div.appendChild(actions);
+                    notesEl.appendChild(div);
+                }
+                savedAt.textContent = 'Saved: ' + new Date().toLocaleString();
+            };
+
+            // Parse title from content if user used "Title: ..." first line.
+            const parseNote = (raw)=>{
+                const lines = raw.split(/\\r?\\n/);
+                let title = '';
+                if(lines[0].toLowerCase().startsWith('title:')){
+                    title = lines[0].slice(6).trim();
+                    lines.shift();
+                }
+                return { title, text: lines.join('\\n').trim(), updatedAt: nowISO() };
+            };
+
+            // Save handlers
+            saveBtn.addEventListener('click', ()=>{
+                const raw = noteInput.value.trim();
+                if(!raw) { alert('Empty note'); return; }
+                const note = parseNote(raw);
+                const arr = loadNotes();
+                arr.push(note);
+                saveNotes(arr);
+                noteInput.value = '';
+                render();
+            });
+
+            saveLocalBtn.addEventListener('click', ()=>{
+                saveBtn.click();
+                window.scrollTo({top:0,behavior:'smooth'});
+            });
+
+            addNote.addEventListener('click', ()=>{
+                noteInput.value = '';
+                noteInput.focus();
+            });
+
+            clearAll.addEventListener('click', ()=>{
+                if(confirm('Clear all notes? This cannot be undone.')) {
+                    localStorage.removeItem(KEY);
+                    render();
+                }
+            });
+
+            // Export / Import
+            exportBtn.addEventListener('click', ()=>{
+                const data = localStorage.getItem(KEY) || '[]';
+                const blob = new Blob([data], {type:'application/json'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = 'focuscloud-notes.json';
+                document.body.appendChild(a); a.click(); a.remove();
+                URL.revokeObjectURL(url);
+            });
+
+            importFile.addEventListener('change', async (e)=>{
+                const f = e.target.files[0]; if(!f) return;
+                try{
+                    const text = await f.text();
+                    const parsed = JSON.parse(text);
+                    if(!Array.isArray(parsed)) throw new Error('Invalid file format');
+                    const existing = loadNotes();
+                    const merged = existing.concat(parsed);
+                    saveNotes(merged);
+                    render();
+                    alert('Imported ' + parsed.length + ' notes');
+                }catch(err){
+                    alert('Import failed: ' + (err.message || err));
+                } finally { importFile.value = ''; }
+            });
+
+            // Clear storage
+            clearStorage.addEventListener('click', ()=>{
+                if(confirm('Clear all localStorage for this site?')) {
+                    localStorage.clear();
+                    render();
+                }
+            });
+
+            // Online status
+            const updateOnline = ()=> {
+                const on = navigator.onLine;
+                onlineStatus.textContent = on ? 'Online' : 'Offline';
+                onlineStatus.style.color = on ? 'var(--accent)' : 'var(--muted)';
+            };
+            window.addEventListener('online', updateOnline);
+            window.addEventListener('offline', updateOnline);
+            updateOnline();
+
+            // Theme
+            const applyTheme = (t)=>{
+                document.documentElement.setAttribute('data-theme', t);
+                themeToggle.textContent = t === 'dark' ? 'Light' : 'Dark';
+                themeToggle.setAttribute('aria-pressed', t === 'dark');
+            };
+            const initTheme = ()=>{
+                const stored = localStorage.getItem(THEME_KEY);
+                if(stored){ applyTheme(stored); return; }
+                // prefer dark if user OS prefers
+                const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                applyTheme(prefersDark ? 'dark' : 'light');
+            };
+            themeToggle.addEventListener('click', ()=>{
+                const cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' :'light';
+                const next = cur === 'dark' ? 'light' : 'dark';
+                applyTheme(next);
+                localStorage.setItem(THEME_KEY, next);
+            });
+            initTheme();
+
+            // Download current page HTML (self-contained single file)
+            downloadHTML.addEventListener('click', ()=>{
+                const html = document.documentElement.outerHTML;
+                const blob = new Blob([ '<!doctype html>\\n' + html ], {type:'text/html'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = 'focuscloud.html';
+                document.body.appendChild(a); a.click(); a.remove();
+                URL.revokeObjectURL(url);
+            });
+
+            // Initialize
+            render();
+
+            // Quick autosave draft to sessionStorage
+            const DRAFT = 'focuscloud.draft';
+            noteInput.addEventListener('input', ()=>{
+                sessionStorage.setItem(DRAFT, noteInput.value);
+            });
+            const draft = sessionStorage.getItem(DRAFT);
+            if(draft) noteInput.value = draft;
+
+            // Keyboard shortcuts
+            window.addEventListener('keydown', (e)=>{
+                if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's'){
+                    e.preventDefault();
+                    saveBtn.click();
+                }
+                if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'b'){
+                    e.preventDefault();
+                    themeToggle.click();
+                }
+            });
+
+            // Small accessibility: focus first editable element on load
+            noteInput.focus();
+        })();
+    </script>
+</body>
+</html></div>
