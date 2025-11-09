@@ -6,10 +6,13 @@
     <title>Portable Web App — FocusCloud</title>
     <meta name="description" content="A small, responsive, single-file portable web application.">
     <meta name="theme-color" content="#0b5cff">
+    <!-- Aleo font -->
+    <link href="https://fonts.googleapis.com/css2?family=Aleo:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root{
             --bg:#f6f7fb; --card:#fff; --text:#0b1330; --muted:#5b6470; --accent:#0b5cff;
             --radius:12px; --gap:16px; --maxw:900px;
+            --title-space:84px; /* height reserved for fixed title */
         }
         [data-theme="dark"]{
             --bg:#0b1220; --card:#071022; --text:#e6eefc; --muted:#94a3c4; --accent:#4ea1ff;
@@ -20,11 +23,34 @@
             margin:0; font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
             Roboto, "Helvetica Neue", Arial; background:var(--bg); color:var(--text);
             -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-            padding:24px; display:flex; align-items:center; justify-content:center;
+            /* reserve extra top padding so content doesn't sit under the fixed title */
+            padding: calc(24px + var(--title-space)) 24px 24px;
+            display:flex; align-items:center; justify-content:center;
         }
         .app{
             width:100%; max-width:var(--maxw); margin:0 auto;
             display:grid; grid-template-columns: 1fr; gap:var(--gap);
+        }
+
+        /* Fixed centered title */
+        h1#title{
+            position:fixed;
+            top:24px;
+            left:50%;
+            transform:translateX(-50%);
+            width:33.333vw; /* one third of the viewport width */
+            max-width:420px; /* optional cap for very wide screens */
+            min-width:200px; /* avoid being too narrow on very small viewports */
+            text-align:center;
+            margin:0;
+            z-index:9999;
+            font-family: "Aleo", Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            font-weight:700;
+            font-size:1.25rem;
+            line-height:1.1;
+            color:var(--text);
+            background:transparent;
+            pointer-events:auto;
         }
 
         header{
@@ -34,7 +60,6 @@
         }
         .brand{display:flex; gap:12px; align-items:center; flex:1}
         .logo{width:44px; height:44px; display:grid; place-items:center; border-radius:10px; background:linear-gradient(135deg,var(--accent),#6adcff); color:white; font-weight:700}
-        h1{font-size:1.05rem; margin:0}
         p.lead{margin:0; color:var(--muted); font-size:0.9rem}
 
         nav{display:flex; gap:8px; align-items:center}
@@ -372,4 +397,4 @@
         })();
     </script>
 </body>
-</html></div>
+</html>
