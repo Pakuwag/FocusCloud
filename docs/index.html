@@ -4,9 +4,25 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Portable Web App — FocusCloud</title>
-    <meta name="description" content="A small, responsive, single-file portable web application.">
+    <title>FocusCloud</title>
+    <!-- Web app / PWA (Android) -->
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#0b5cff">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- iOS standalone mode -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="FocusCloud">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+    <!-- Icons (provide these files in your assets/icons folder, sizes as shown) -->
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="assets/icons/icon-512.png">
+
+    <!-- Windows tile -->
+    <meta name="msapplication-TileColor" content="#0b5cff">
+
     <!-- Google Fonts: EB Garamond + Montserrat -->
     <link
         href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@400;700&display=swap"
