@@ -19,31 +19,21 @@
             --mutedolive: #95b46a;
             --deepspaceblue: #0b5cff;
             --blackoutline: #000000;
-            --radius: 12px;
+            --radius: 30px;
             --gap: 16px;
-            --maxw: 900px;
-            --title-space: 84px;
+            --title-space: 45px;
             /* height reserved for fixed title */
         }
 
-        header {
-            text-align: center;
-            /* FocusCloud */
-
-
-
-
-        }
-
         header h1 {
+            text-align: center;
             font-family: 'EB Garamond';
             font-style: normal;
             font-weight: 400;
             font-size: 80px;
-            line-height: 75px;
+            line-height: 60px;
             margin: 0;
-
-            color: #000000;
+            color: var(--blackoutline);
         }
 
         h1 small {
@@ -51,12 +41,45 @@
             font-size: 24px;
             font-family: 'Montserrat', sans-serif;
         }
+
+        .card {
+            box-sizing: border-box;
+            width: 27vw;
+            aspect-ratio: 16/9;
+            border: 3px solid var(--mediumgrey);
+            border-radius: var(--radius);
+            padding: 2.5vw;
+
+            & img {
+                width: 50%;
+                object-fit: contain;
+            }
+        }
+
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--gap);
+            margin: 0 auto;
+            margin-top: var(--title-space);
+        }
     </style>
 </head>
+
 <body>
     <header>
         <h1><small>welcome to</small> <br> FocusCloud</h1>
     </header>
+
+    <main class="cards">
+        <div class="card"> <img src="assets/tomatotimer.png"></div>
+        <div class="card"><img src="assets/checklist.png"></div>
+        <div class="card"><img src="assets/planes.png"></div>
+        <div class="card"><img src="assets/stickynotes.png"></div>
+        <div class="card"><img src="assets/todolist.png"></div>
+
+    </main>
 </body>
 
 </html>
