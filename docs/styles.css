@@ -1,70 +1,90 @@
  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@400;700&display=swap');
 
  :root {
-            --bg: #ffffff;
-            --mediumgrey: #8E8B8B;
-            --cherryblossom: #ffadc2;
-            --mutedolive: #95b46a;
-            --deepspaceblue: #0b5cff;
-            --blackoutline: #000000;
-            --radius: 30px;
-            --gap: 16px;
-            --title-space: 45px;
-            /* height reserved for fixed title */
-        }
+     --bg: #ffffff;
+     --mediumgrey: #8E8B8B;
+     --cherryblossom: #ffadc2;
+     --mutedolive: #95b46a;
+     --deepspaceblue: #0b5cff;
+     --blackoutline: #000000;
+     --radius: 30px;
+     --gap: 16px;
+     --title-space: 45px;
+     /* height reserved for fixed title */
+ }
 
-        header h1 {
-            text-align: center;
-            font-family: 'EB Garamond';
-            font-style: normal;
-            font-weight: 400;
-            font-size: 80px;
-            line-height: 60px;
-            margin: 0;
-            color: var(--blackoutline);
-        }
+ header h1 {
+     text-align: center;
+     font-family: 'EB Garamond';
+     font-style: normal;
+     font-weight: 400;
+     font-size: 80px;
+     line-height: 60px;
+     margin: 0;
+     color: var(--blackoutline);
+ }
 
-        h1 small {
-            font-family: 'Montserrat';
-            font-size: 24px;
-            font-family: 'Montserrat', sans-serif;
-        }
+ h1 small {
+     font-family: 'Montserrat';
+     font-size: 24px;
+     font-family: 'Montserrat', sans-serif;
+ }
 
-        .card {
-            box-sizing: border-box;
-            width: 27vw;
-            aspect-ratio: 16/9;
-            border: 3px solid var(--mediumgrey);
-            border-radius: var(--radius);
-            padding: 2.5vw;
+ .card {
+     box-sizing: border-box;
+     width: 27vw;
+     aspect-ratio: 16/9;
+     border: 3px solid var(--mediumgrey);
+     border-radius: var(--radius);
+     padding: 2.5vw;
 
-            & img {
-                width: 50%;
-                object-fit: contain;
-            }
-        }
-        a.card {
-            text-decoration: none;
-            color: var(--mediumgrey);
-            font-family: 'Montserrat', sans-serif;
-            font-size: 24px;
-            font-weight: 400;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-        }
+     & img {
+         width: 50%;
+         object-fit: contain;
+     }
+ }
 
-        .cards {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: var(--gap);
-            margin: 0 auto;
-            margin-top: var(--title-space);
-        }
+ a.card {
+     text-decoration: none;
+     color: var(--mediumgrey);
+     font-family: 'Montserrat', sans-serif;
+     font-size: 24px;
+     font-weight: 400;
+     display: flex;
+     flex-direction: row;
+     align-items: center;
+     justify-content: center;
+     gap: 1rem;
+ }
 
+ .cards {
+     display: flex;
+     flex-wrap: wrap;
+     justify-content: center;
+     gap: var(--gap);
+     margin: 0 auto;
+     margin-top: var(--title-space);
+ }
 
-        
+ header {
+     display: flex;
+     justify-content: space-between;
+ }
 
+ .backarrow {
+     height: 20px;
+   padding: 0 1rem;
+ }
+ .toolbar {
+     display: inline-flex;
+     align-items: center;
+     justify-content: flex-end;
+     padding: 0 1rem;
+     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+     gap: 20px;
+
+     & img {
+         height: 30px;
+     }
+ }
+ 
