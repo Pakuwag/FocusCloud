@@ -127,3 +127,52 @@
      border-color: var(--darkblue);
      color: var(--white);
  }
+
+ .todolist,
+ .todolist ul {
+     list-style-type: none;
+ }
+
+ .todolist {
+     padding: 0;
+ }
+
+ .todolist ul {
+     padding-left: 1.5rem;
+     padding-bottom: 0.5rem;
+ }
+
+:root {
+    --checkbox-size: 28px; /* adjust this to make checkboxes bigger/smaller */
+}
+
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: var(--checkbox-size);
+    height: var(--checkbox-size);
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    background-color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    box-sizing: border-box;
+    transition: border-color .15s, box-shadow .15s;
+}
+
+/* checked: same grey circle + pink check mark (SVG data URI) */
+input[type="checkbox"]:checked {
+    background-color: #fff;
+    border-color: #ccc;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M4.5 12l4 4L19.5 5' fill='none' stroke='%23FFACC2' stroke-width='4.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 70%;
+}
+
+/* optional focus style */
+input[type="checkbox"]:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255,45,149,0.12);
+}
