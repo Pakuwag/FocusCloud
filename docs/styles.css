@@ -7,6 +7,9 @@
      --mutedolive: #95b46a;
      --deepspaceblue: #0b5cff;
      --blackoutline: #000000;
+     --beige: #E6D8CA;
+     --white: #FFFFFF;
+     --darkblue: #012F4F;
      --radius: 30px;
      --gap: 16px;
      --title-space: 45px;
@@ -71,10 +74,16 @@
      justify-content: space-between;
  }
 
+ .homepage-header {
+     display: initial;
+     justify-content: initial;
+ }
+
  .backarrow {
      height: 20px;
-   padding: 0 1rem;
+     padding: 0 1rem;
  }
+
  .toolbar {
      display: inline-flex;
      align-items: center;
@@ -86,5 +95,35 @@
      & img {
          height: 30px;
      }
+
+     & a.active {
+         background-color: var(--mediumgrey);
+     }
  }
- 
+
+ .button {
+     padding: 8px 16px;
+     border: 2px solid var(--cherryblossom);
+     border-radius: 5px;
+     background-color: var(--white);
+     color: var(--cherryblossom);
+     font-family: 'Montserrat', sans-serif;
+     font-size: 16px;
+     cursor: pointer;
+     text-decoration: none;
+     display: inline-block;
+     text-align: center;
+     font-weight: 600;
+ }
+
+ .button.beige {
+     background-color: var(--beige);
+     border-color: var(--beige);
+     color: var(--white);
+ }
+
+ .button.darkblue {
+     background-color: var(--darkblue);
+     border-color: var(--darkblue);
+     color: var(--white);
+ }
